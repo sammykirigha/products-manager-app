@@ -1,17 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { IProducts } from './products';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products-list.component.html',
+  styleUrls: ['./product-list.component.css'],
 })
-export class ProductComponent {
+export class ProductComponent implements OnInit {
   pageTitle: string = 'Product List';
   imageWidth: number = 50;
   imageMargin: number = 2;
   showImage: boolean = false;
-  listFilter: string = 'cart';
 
-  products: any[] = [
+  private _listFilter: string = '';
+
+  get listFilter(): string {
+    return this._listFilter;
+  }
+
+  set listFilter(value: string) {
+    this._listFilter = value;
+    console.log('In Setter', value);
+    this.filteredProducts = this.performFilter(value);
+  }
+
+  filteredProducts: IProducts[] = [];
+  products: IProducts[] = [
     {
       productId: 2,
       productName: 'Garden Cart',
@@ -36,5 +50,17 @@ export class ProductComponent {
 
   toggleShowImage(): void {
     this.showImage = !this.showImage;
+  }
+
+  ngOnInit(): void {
+    this.listFilter = 'Cart';
+    console.log('In OnInit');
+  }
+
+  performFilter(filterBy: string): IProducts[] {
+    filterBy = filterBy.toLocaleLowerCase();
+    return this.products.filter((product: IProducts) =>
+      product.productName.toLocaleLowerCase().includes(filterBy)
+    );
   }
 }
