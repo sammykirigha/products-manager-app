@@ -33,7 +33,7 @@ export class ProductComponent implements OnInit {
       releaseDate: 'March 13, 2021',
       description: '15 gallon capacity rolling garden cart',
       price: 23.99,
-      startRating: 4.2,
+      starRating: 1.2,
       imageUrl: 'assets/images/garden_cart.png',
     },
     {
@@ -43,7 +43,7 @@ export class ProductComponent implements OnInit {
       releaseDate: 'March 19, 2021',
       description: 'Curved claw steel hammer',
       price: 10.99,
-      startRating: 4.8,
+      starRating: 5,
       imageUrl: 'assets/images/hammer.png',
     },
   ];
@@ -55,6 +55,10 @@ export class ProductComponent implements OnInit {
   ngOnInit(): void {
     this.listFilter = 'Cart';
     console.log('In OnInit');
+  }
+
+  onRatingClicked(message: string): void {
+    this.pageTitle = 'Product List: ' + message;
   }
 
   performFilter(filterBy: string): IProducts[] {
