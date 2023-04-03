@@ -1,52 +1,32 @@
 import { Injectable } from '@angular/core';
 import { IProducts } from './products';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, tap, catchError, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  getProducts(): IProducts[] {
-    return [
-      {
-        productId: 2,
-        productName: 'Garden Cart',
-        productCode: 'GDN-0023',
-        releaseDate: 'March 13, 2021',
-        description: '15 gallon capacity rolling garden cart',
-        price: 23.99,
-        starRating: 1.2,
-        imageUrl: 'assets/images/garden_cart.png',
-      },
-      {
-        productId: 4,
-        productName: 'Hammer',
-        productCode: 'TBX-0098',
-        releaseDate: 'March 19, 2021',
-        description: 'Curved claw steel hammer',
-        price: 10.99,
-        starRating: 5,
-        imageUrl: 'assets/images/hammer.png',
-      },
-      {
-        productId: 2,
-        productName: 'Garden Cart',
-        productCode: 'GDN-0023',
-        releaseDate: 'March 13, 2021',
-        description: '15 gallon capacity rolling garden cart',
-        price: 23.99,
-        starRating: 2.2,
-        imageUrl: 'assets/images/garden_cart.png',
-      },
-      {
-        productId: 4,
-        productName: 'Hammer',
-        productCode: 'TBX-0098',
-        releaseDate: 'March 19, 2021',
-        description: 'Curved claw steel hammer',
-        price: 10.99,
-        starRating: 3,
-        imageUrl: 'assets/images/hammer.png',
-      },
-    ];
+  private productUrl = 'api/products/products.json';
+
+  constructor(private http: HttpClient) {}
+
+  getProducts(): Observable<IProducts[]> {
+    console.log(this.productUrl);
+    return this.http.get<IProducts[]>(this.productUrl).pipe(
+      tap((data) => console.log('All', JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  handleError(err: HttpErrorResponse) {
+    let errorMessage = '';
+    if (err.error instanceof ErrorEvent) {
+      errorMessage = `An error occurred: ${err.error.message}`;
+    } else {
+      errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`;
+    }
+    console.error(errorMessage);
+    return throwError(() => errorMessage);
   }
 }
